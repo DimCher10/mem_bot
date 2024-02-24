@@ -29,3 +29,15 @@ def get_memes(number=5):
     cursor = connection.cursor()
     cursor.execute("SELECT file_id FROM images LIMIT ?", (number,))
     return cursor.fetchall()
+
+
+def add_moderator(user_id):
+    connection = sqlite3.connect("db.sqlite3")
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO roles VALUES (?,?)", (user_id))
+
+def get_current_id():
+    connection = sqlite3.connect("db.sqlite3")
+    cursor = connection.cursor()
+    cursor.execute("SELECT MAX(id) FROM images;")
+    return cursor.fetchone()[0]+1

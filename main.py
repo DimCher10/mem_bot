@@ -22,19 +22,30 @@ def modify_message(bot_instance, message):
         message.text += f' (Ваш ID: {user_id})'
 
 @bot.message_handler(commands = ['memes'])
-def memes_send(message):
+def meme_send(message):
     user_id = message.from_user.id
+    keyboard = types.InlineKeyboardMarkup(row_width=3)
+    like_button = types.InlineKeyboardButton(
+            text="👍",
+        callback_data=f"like_{message_id}"
+        )
+    dislike_button = types.InlineKeyboardButton(
+            text="👎",
+        callback_data=f"dislike_{message_id}"
+        )
+    keyboard.add(like_button, dislike_button)
     
 
 @bot.message_handler(content_types=['photo'])
 def handle_photos(message):
+    user_id = message.from_user.id
     file_id = message.photo[-1].file_id
-    file_info = bot.get_file(file_id)
-    downloaded_file = bot.download_file(file_info.file_path)
-    filename = save_photo(file_id)
-    with open(os.path.join("images", f"{filename}.jpg"), "wb") as f:
-        f.write(downloaded_file)
-
+    photo_info = bot.get_file(file_id)
+    photo_file = bot.download_file(photo_info.file_path)
+    file_name = f"{user_id}.ogg"
+    save_photo(file_id)
+    with open(f'voice_messages/{file_name}', 'wb') as f:
+        f.write(photo_file)
 
 
 
